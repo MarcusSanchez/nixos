@@ -1,6 +1,7 @@
 {
   inputs = {
     nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable";
+    flake-parts.url = "github:hercules-ci/flake-parts";
     nixos-wsl.url = "github:nix-community/NixOS-WSL/main";
     home-manager = {
       url = "github:nix-community/home-manager";
@@ -9,29 +10,18 @@
     claude-code.url = "github:sadjow/claude-code-nix";
   };
 
-  outputs = { self, nixpkgs, nixos-wsl, home-manager, claude-code, ... }: {
-    nixosConfigurations.nixos = nixpkgs.lib.nixosSystem {
-      system = "x86_64-linux";
-      modules = [
-        nixos-wsl.nixosModules.default
-        {
-          system.stateVersion = "25.05";
-          wsl.enable = true;
-          wsl.defaultUser = "sugar";
-        }
-        home-manager.nixosModules.home-manager
-        {
-          home-manager.useGlobalPkgs = true;
-          home-manager.useUserPackages = true;
-          home-manager.users.sugar = import ./sugar.nix;
-        }
-        ./configuration.nix
-        ({ pkgs, ... }: {
-          nixpkgs.overlays = [ claude-code.overlays.default ];
-          environment.systemPackages = [ pkgs.claude-code ]; # or pkgs.claude-code-bun
-        })
-      ];
+  outputs = inputs@{ flake-parts, ... }:
+    flake-parts.lib.mkFlake { inherit inputs; } {
+      systems = [ "x86_64-linux" ];
+      flake.nixosConfigurations.nixos = inputs.nixpkgs.lib.nixosSystem {
+        system = "x86_64-linux";
+        specialArgs = { inherit inputs; };
+        modules = [
+          ./modules/wsl.nix
+          ./modules/home-manager.nix
+          ./modules/claude-code.nix
+          ./modules/configuration.nix
+        ];
+      };
     };
-  };
 }
-
