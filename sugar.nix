@@ -1,6 +1,8 @@
-{ config, pkgs, lib, ... }:
+{ inputs, config, pkgs, lib, ... }:
 
 {
+  imports = [ inputs.catppuccin.homeModules.default ];
+
   home.username = "sugar";
   home.homeDirectory = "/home/sugar";
 
@@ -47,6 +49,15 @@
       bindkey '^I' autosuggest-accept
       bindkey "$terminfo[kcbt]" expand-or-complete
     '';
+  };
+
+  catppuccin = { 
+    enable = true;
+    flavor = "mocha";
+    accent = "blue";
+
+    zsh-syntax-highlighting.enable = true;
+    atuin.enable = true;
   };
 
   programs.git = {

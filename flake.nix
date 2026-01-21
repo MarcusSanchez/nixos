@@ -8,6 +8,7 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
     claude-code.url = "github:sadjow/claude-code-nix";
+    catppuccin.url = "github:catppuccin/nix";
   };
 
   outputs = inputs@{ flake-parts, ... }:
