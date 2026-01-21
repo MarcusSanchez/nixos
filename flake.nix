@@ -17,10 +17,11 @@
         system = "x86_64-linux";
         specialArgs = { inherit inputs; };
         modules = [
+          ./configuration.nix
+
           ./modules/wsl.nix
           ./modules/home-manager.nix
           ./modules/claude-code.nix
-          ./modules/configuration.nix
         ];
       };
     };

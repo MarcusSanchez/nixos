@@ -9,13 +9,7 @@
     unzip
     gzip
     gnutar
-
-    # lazyvim deps
-    tree-sitter
-    ripgrep
-    fd
-    fzf
-    xclip
+    tree
 
     nodejs_latest
     nodePackages.npm
