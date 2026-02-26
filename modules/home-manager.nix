@@ -5,6 +5,6 @@
   home-manager.useGlobalPkgs = true;
   home-manager.useUserPackages = true;
   home-manager.extraSpecialArgs = { inherit inputs; };
-  home-manager.users.sugar = import ./../sugar.nix;
+  home-manager.users.marcus = import ./../marcus.nix;
 }
 

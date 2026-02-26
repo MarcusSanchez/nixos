@@ -20,8 +20,8 @@
 
   programs.zsh.enable = true;
 
-  users.users.sugar.isNormalUser = true;
-  users.users.sugar.shell = pkgs.zsh;
+  users.users.marcus.isNormalUser = true;
+  users.users.marcus.shell = pkgs.zsh;
 
   networking.hostName = "nixos";
 

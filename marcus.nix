@@ -3,8 +3,8 @@
 {
   imports = [ inputs.catppuccin.homeModules.default ];
 
-  home.username = "sugar";
-  home.homeDirectory = "/home/sugar";
+  home.username = "marcus";
+  home.homeDirectory = "/home/marcus";
 
   home.stateVersion = "25.05";
 

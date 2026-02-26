@@ -3,7 +3,7 @@
 {
   imports = [ inputs.nixos-wsl.nixosModules.default ];
   wsl.enable = true;
-  wsl.defaultUser = "sugar";
+  wsl.defaultUser = "marcus";
   system.stateVersion = "25.05";
 }
 
