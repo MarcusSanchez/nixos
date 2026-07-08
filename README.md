@@ -14,13 +14,12 @@ hosts/
 modules/nixos/             System-level modules (one concern per file)
   default.nix              Aggregator — imports everything below
   nix.nix                  Nix settings, GC, auto-upgrade
-  packages.nix             System dev toolchains (go, rust, node, ...)
+  packages.nix             System dev toolchains (go, rust, zig+zls, node, ...)
   nix-ld.nix               Run unpatched dynamic binaries on NixOS
   users.nix                User accounts + login shell
   wsl.nix                  NixOS-WSL integration
   home-manager.nix         Bridges Home Manager; points at home/marcus
   claude-code.nix          Claude Code (claude-code-nix overlay)
-  zig.nix                  Zig 0.16.0 + matching ZLS
 home/marcus/               Home Manager (per-user) modules
   default.nix              Entry point — identity, stateVersion, imports
   packages.nix             Standalone user tools

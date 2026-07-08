@@ -16,5 +16,10 @@
     gopls
 
     rustup # all you need for rust development
+
+    # zls is built against this same nixpkgs zig, so the compiler and
+    # language server stay on matching versions automatically
+    zig
+    zls
   ];
 }

@@ -10,6 +10,5 @@
     ./wsl.nix
     ./home-manager.nix
     ./claude-code.nix
-    ./zig.nix
   ];
 }
