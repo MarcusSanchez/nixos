@@ -11,6 +11,7 @@
   home.packages = with pkgs; [
     croc
     buf
+    flyctl
 
     # lazyvim deps
     tree-sitter
