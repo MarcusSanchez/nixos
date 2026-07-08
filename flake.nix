@@ -1,4 +1,6 @@
 {
+  description = "Marcus's NixOS configuration (WSL)";
+
   inputs = {
     nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable";
     flake-parts.url = "github:hercules-ci/flake-parts";
@@ -14,20 +16,22 @@
     zls-overlay.url = "github:zigtools/zls/0.16.0";
   };
 
-  outputs = inputs@{ flake-parts, ... }:
+  outputs =
+    inputs@{ flake-parts, nixpkgs, ... }:
     flake-parts.lib.mkFlake { inherit inputs; } {
       systems = [ "x86_64-linux" ];
-      flake.nixosConfigurations.nixos = inputs.nixpkgs.lib.nixosSystem {
+
+      perSystem =
+        { pkgs, ... }:
+        {
+          # `nix fmt` formats the whole tree
+          formatter = pkgs.nixfmt-tree;
+        };
+
+      flake.nixosConfigurations.nixos = nixpkgs.lib.nixosSystem {
         system = "x86_64-linux";
         specialArgs = { inherit inputs; };
-        modules = [
-          ./configuration.nix
-
-          ./modules/wsl.nix
-          ./modules/home-manager.nix
-          ./modules/claude-code.nix
-          ./modules/zig-zls.nix
-        ];
+        modules = [ ./hosts/wsl ];
       };
     };
 }
