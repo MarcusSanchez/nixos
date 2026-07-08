@@ -8,7 +8,7 @@ The repo lives at `~/nixos-config`; `/etc/nixos` is a symlink to it, so both
 ## Layout
 
 ```
-flake.nix                  Inputs + host wiring (flake-parts)
+flake.nix                  Inputs + host wiring
 hosts/
   wsl/default.nix          Host-specific: hostname, stateVersion
 modules/nixos/             System-level modules (one concern per file)
