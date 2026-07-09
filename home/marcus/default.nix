@@ -8,6 +8,7 @@
     ./neovim.nix
     ./git.nix
     ./catppuccin.nix
+    ./toolchains.nix
   ];
 
   home.username = "marcus";

@@ -15,13 +15,13 @@
     go
     gopls
 
-    # rust, all from the same nixpkgs tree so compiler and tooling always
-    # match (rustup's downloaded toolchains broke on every glibc bump + GC)
-    rustc
-    cargo
-    clippy
-    rustfmt
-    rust-analyzer
+    # rustup rather than nixpkgs rustc/cargo: RustRover only accepts a
+    # rustup-managed toolchain. Its downloaded binaries break when a glibc
+    # bump + GC removes the linker they were patched against; the activation
+    # hook in home/marcus/toolchains.nix repairs that automatically.
+    rustup
+
+    buf # protobuf tooling, JetBrains plugin points at it
 
     # zls is built against this same nixpkgs zig, so the compiler and
     # language server stay on matching versions automatically

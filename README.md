@@ -14,7 +14,7 @@ hosts/
 modules/nixos/             System-level modules (one concern per file)
   default.nix              Aggregator — imports everything below
   nix.nix                  Nix settings, GC, auto-upgrade
-  packages.nix             System dev toolchains (go, rust, zig+zls, node, ...)
+  packages.nix             System dev toolchains (go, rustup, zig+zls, node, buf, ...)
   nix-ld.nix               Run unpatched dynamic binaries on NixOS
   users.nix                User accounts + login shell
   wsl.nix                  NixOS-WSL integration
@@ -29,6 +29,8 @@ home/marcus/               Home Manager (per-user) modules
                            normal mutable git checkout, not nix-managed)
   git.nix                  Git identity + gh
   catppuccin.nix           Catppuccin Mocha theming
+  toolchains.nix           Stable ~/.toolchains paths for IDEs; rustup
+                           toolchain auto-repair on glibc bumps
 ```
 
 ## Common operations
