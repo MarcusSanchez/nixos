@@ -29,7 +29,8 @@ home/marcus/               Home Manager (per-user) modules
                            normal mutable git checkout, not nix-managed)
   git.nix                  Git identity + gh
   catppuccin.nix           Catppuccin Mocha theming
-  toolchains.nix           Stable ~/.toolchains paths for IDEs; rustup
+  toolchains.nix           ~/.toolchains real-dir copies for Windows IDEs
+                           (\\wsl$ can't traverse symlinks); rustup
                            toolchain auto-repair on glibc bumps
 ```
 

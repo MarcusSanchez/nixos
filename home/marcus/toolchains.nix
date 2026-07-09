@@ -1,15 +1,45 @@
-# Stable toolchain paths for IDEs, plus the rustup repair hook.
+# Real-directory toolchain copies for Windows-side IDEs, plus rustup repair.
 #
-# JetBrains resolves symlinks and pins the resulting /nix/store path, which
-# goes stale on upgrade. Pin these ~/.toolchains paths in the IDE instead:
-# they retarget on every rebuild, and their targets can't be garbage
-# collected while the generation is live.
+# JetBrains on Windows browses WSL files over \\wsl$, which exposes Linux
+# symlinks as reparse points its file picker can't traverse — so anything
+# the IDE must select has to be a real directory with real files, not a
+# link into /nix/store. The hook below dereference-copies each toolchain
+# into ~/.toolchains and only re-copies when its store path changes.
+# rustup's toolchains are already real directories, so RustRover works
+# against ~/.rustup as-is.
 { pkgs, lib, ... }:
 
+let
+  ideToolchains = {
+    go = "${pkgs.go}/share/go"; # GOROOT
+    node = "${pkgs.nodejs_latest}";
+    buf = "${pkgs.buf}";
+  };
+in
 {
-  home.file.".toolchains/go".source = "${pkgs.go}/share/go"; # GOROOT
-  home.file.".toolchains/node".source = pkgs.nodejs_latest;
-  home.file.".toolchains/buf".source = pkgs.buf;
+  home.activation.ideToolchains = lib.hm.dag.entryAfter [ "writeBoundary" ] ''
+    sync_toolchain() {
+      local name="$1" src="$2"
+      local dir="$HOME/.toolchains/$name" stamp="$HOME/.toolchains/.$name-stamp"
+      [ "$(cat "$stamp" 2>/dev/null)" = "$src" ] && return 0
+      if [ -n "''${DRY_RUN:-}" ]; then
+        echo "would sync $dir from $src"
+        return 0
+      fi
+      rm -rf "$dir.new"
+      cp -rL "$src" "$dir.new"
+      chmod -R u+w "$dir.new"
+      rm -rf "$dir"
+      mv "$dir.new" "$dir"
+      printf '%s' "$src" > "$stamp"
+    }
+    mkdir -p "$HOME/.toolchains"
+    ${lib.concatStrings (
+      lib.mapAttrsToList (name: src: ''
+        sync_toolchain ${name} ${src}
+      '') ideToolchains
+    )}
+  '';
 
   # rustup-downloaded toolchains are patched against one specific store
   # glibc; when an upgrade bumps glibc and GC deletes the old one, every
