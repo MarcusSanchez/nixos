@@ -20,18 +20,16 @@ in
       local name="$1" src="$2"
       local dir="$HOME/.toolchains/$name" stamp="$HOME/.toolchains/.$name-stamp"
       [ "$(cat "$stamp" 2>/dev/null)" = "$src" ] && return 0
-      if [ -n "''${DRY_RUN:-}" ]; then
-        echo "would sync $dir from $src"
-        return 0
-      fi
-      rm -rf "$dir.new"
-      cp -rL "$src" "$dir.new"
-      chmod -R u+w "$dir.new"
-      rm -rf "$dir"
-      mv "$dir.new" "$dir"
-      printf '%s' "$src" > "$stamp"
+      run rm -rf "$dir.new"
+      # -L is the point: the copy must contain no symlinks at all, or the
+      # Windows-side file picker breaks on them
+      run cp -rL "$src" "$dir.new"
+      run chmod -R u+w "$dir.new"
+      run rm -rf "$dir"
+      run mv "$dir.new" "$dir"
+      run sh -c "printf '%s' '$src' > '$stamp'"
     }
-    mkdir -p "$HOME/.toolchains"
+    run mkdir -p "$HOME/.toolchains"
     ${lib.concatStrings (
       lib.mapAttrsToList (name: src: ''
         sync_toolchain ${name} ${src}
@@ -46,11 +44,11 @@ in
   # offline it warns and retries on the next activation.
   home.activation.rustupToolchain = lib.hm.dag.entryAfter [ "writeBoundary" ] ''
     stamp="$HOME/.rustup/.nix-glibc-stamp"
-    if [ -z "''${DRY_RUN:-}" ] && [ "$(cat "$stamp" 2>/dev/null)" != "${pkgs.glibc}" ]; then
-      ${pkgs.rustup}/bin/rustup toolchain uninstall stable >/dev/null 2>&1 || true
-      if ${pkgs.rustup}/bin/rustup toolchain install stable; then
-        ${pkgs.rustup}/bin/rustup default stable
-        printf '%s' "${pkgs.glibc}" > "$stamp"
+    if [ "$(cat "$stamp" 2>/dev/null)" != "${pkgs.glibc}" ]; then
+      run ${pkgs.rustup}/bin/rustup toolchain uninstall stable || true
+      if run ${pkgs.rustup}/bin/rustup toolchain install stable; then
+        run ${pkgs.rustup}/bin/rustup default stable
+        run sh -c "printf '%s' '${pkgs.glibc}' > '$stamp'"
       else
         echo "rustup: toolchain install failed (offline?); rust stays broken until the next successful activation" >&2
       fi
