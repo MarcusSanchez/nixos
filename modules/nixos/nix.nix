@@ -29,5 +29,8 @@
   # is already persistent by default.)
   systemd.timers.nixos-upgrade.timerConfig.Persistent = true;
 
+  # Let bare `nh os switch` find the flake without a path argument.
+  environment.sessionVariables.NH_FLAKE = "/etc/nixos";
+
   nixpkgs.config.allowUnfree = true;
 }

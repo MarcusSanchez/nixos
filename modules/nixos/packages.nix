@@ -31,6 +31,10 @@
 
     buf # protobuf tooling, JetBrains plugin points at it
 
+    # nix: LSP + formatter (the lang.nix LazyVim extra uses these)
+    nixd
+    nixfmt
+
     # zls is built against this same nixpkgs zig, so the compiler and
     # language server stay on matching versions automatically
     zig
