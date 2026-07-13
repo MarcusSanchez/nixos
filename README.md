@@ -69,8 +69,8 @@ A fresh instance boots as the stock `nixos` user; the first rebuild creates
 
 ```powershell
 # (pick a different --name if this PC already has a NixOS instance)
-wsl --install --from-file nixos.wsl --name NixOS
-wsl -d NixOS
+wsl --install --from-file nixos.wsl --name nixos
+wsl -d nixos
 ```
 
 **Inside, as the default `nixos` user:**
@@ -93,8 +93,8 @@ exit
 **On Windows again:**
 
 ```powershell
-wsl -t NixOS   # restart so wsl.defaultUser takes effect
-wsl -d NixOS   # lands as marcus
+wsl -t nixos   # restart so wsl.defaultUser takes effect
+wsl -d nixos   # lands as marcus
 ```
 
 **First login as marcus** — the neovim config is already cloned to
