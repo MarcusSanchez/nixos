@@ -73,8 +73,11 @@ wsl -d <instance-name>
 **Inside, as the default `nixos` user:**
 
 ```sh
-sudo nix run nixpkgs#git -- clone https://github.com/MarcusSanchez/nixos.git /tmp/nixos-config
-sudo nixos-rebuild switch --flake /tmp/nixos-config#nixos
+# The stock image has flakes disabled, so the first two commands pass the
+# feature flags explicitly (an env var would be stripped by sudo). After
+# the first switch the config enables flakes permanently.
+sudo nix --extra-experimental-features 'nix-command flakes' run nixpkgs#git -- clone https://github.com/MarcusSanchez/nixos.git /tmp/nixos-config
+sudo nixos-rebuild switch --option experimental-features 'nix-command flakes' --flake /tmp/nixos-config#nixos
 
 # Move the repo home and recreate the /etc/nixos symlink (not managed by
 # the config; autoUpgrade depends on it)
@@ -83,9 +86,6 @@ sudo chown -R marcus:users /home/marcus/nixos-config
 sudo ln -sfn /home/marcus/nixos-config /etc/nixos
 exit
 ```
-
-If the tarball predates flakes being enabled by default, prefix the rebuild
-with `NIX_CONFIG="experimental-features = nix-command flakes"`.
 
 **On Windows again:**
 
