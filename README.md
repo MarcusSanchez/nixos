@@ -37,12 +37,11 @@ home/marcus/               Home Manager (per-user) modules
 ## Common operations
 
 ```sh
-# Apply the configuration
-sudo nixos-rebuild switch --flake /etc/nixos
+# Apply the configuration (builds, shows an nvd diff of what changed, activates)
+nh os switch
 
-# Update all inputs, then apply
-nix flake update
-sudo nixos-rebuild switch --flake /etc/nixos
+# Update all flake inputs, then apply — commit flake.lock afterwards
+nh os switch -u
 
 # Format all nix files
 nix fmt
@@ -50,6 +49,9 @@ nix fmt
 # Sanity-check without switching
 nix flake check
 ```
+
+(`sudo nixos-rebuild switch` still works — it's what bootstrapping uses
+before `nh` exists on the machine.)
 
 Auto-upgrade rebuilds this flake weekly against its lockfile; inputs only
 move when you run `nix flake update`. Garbage collection runs daily and
@@ -66,8 +68,9 @@ A fresh instance boots as the stock `nixos` user; the first rebuild creates
 [NixOS-WSL releases](https://github.com/nix-community/NixOS-WSL/releases), then:
 
 ```powershell
-wsl --install --from-file nixos.wsl --name <instance-name>
-wsl -d <instance-name>
+# (pick a different --name if this PC already has a NixOS instance)
+wsl --install --from-file nixos.wsl --name NixOS
+wsl -d NixOS
 ```
 
 **Inside, as the default `nixos` user:**
@@ -90,8 +93,8 @@ exit
 **On Windows again:**
 
 ```powershell
-wsl -t <instance-name>   # restart so wsl.defaultUser takes effect
-wsl -d <instance-name>   # lands as marcus
+wsl -t NixOS   # restart so wsl.defaultUser takes effect
+wsl -d NixOS   # lands as marcus
 ```
 
 **First login as marcus** — the neovim config is already cloned to
