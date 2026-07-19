@@ -19,9 +19,15 @@
   # First-run bootstrap: clone the editor config if it isn't there yet.
   # It stays a normal mutable git checkout, so lazy.nvim can write
   # lazy-lock.json and you can commit/push from ~/.config/nvim as usual.
-  home.activation.cloneNvimConfig = lib.hm.dag.entryAfter [ "writeBoundary" ] ''
+  # On later activations, pull the latest — but only when it cannot lose
+  # work: clean tree, fast-forward only, and never fail the rebuild
+  # (offline / diverged just skip).
+  home.activation.syncNvimConfig = lib.hm.dag.entryAfter [ "writeBoundary" ] ''
     if [ ! -e "$HOME/.config/nvim" ]; then
       run ${pkgs.git}/bin/git clone https://github.com/marcussanchez/neovim-config.git "$HOME/.config/nvim"
+    elif [ -d "$HOME/.config/nvim/.git" ] \
+      && [ -z "$(${pkgs.git}/bin/git -C "$HOME/.config/nvim" status --porcelain)" ]; then
+      run ${pkgs.git}/bin/git -C "$HOME/.config/nvim" pull --ff-only || true
     fi
   '';
 }

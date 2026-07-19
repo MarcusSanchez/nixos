@@ -25,8 +25,10 @@ home/marcus/               Home Manager (per-user) modules
   packages.nix             Standalone user tools
   shell.nix                zsh + oh-my-zsh, zoxide, atuin
   neovim.nix               Neovim (stable); clones marcussanchez/neovim-config
-                           to ~/.config/nvim on first activation (stays a
-                           normal mutable git checkout, not nix-managed)
+                           to ~/.config/nvim on first activation, ff-only
+                           pulls it on later ones when the tree is clean
+                           (stays a normal mutable git checkout, not
+                           nix-managed)
   git.nix                  Git identity + gh
   catppuccin.nix           Catppuccin Mocha theming
   toolchains.nix           ~/.toolchains/go real-dir GOROOT copy for Windows
