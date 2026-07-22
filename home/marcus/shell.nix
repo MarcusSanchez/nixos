@@ -5,6 +5,14 @@
   programs.zoxide.enable = true;
   programs.atuin.enable = true;
 
+  # Auto-load per-project dev shells: a project with an .envrc saying
+  # `use flake` gets its devShell on cd-in, dropped on cd-out.
+  # nix-direnv caches the shell so re-entry is instant.
+  programs.direnv = {
+    enable = true;
+    nix-direnv.enable = true;
+  };
+
   # Let `npm install -g` work natively: install into a writable prefix
   # instead of the read-only nix store. Deliberately impure — global npm
   # CLIs are throwaway convenience tools here, and nix-ld covers any

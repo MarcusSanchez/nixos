@@ -110,6 +110,22 @@ state:
 Leave both `stateVersion`s at `"25.05"` even on a newer install — they are
 compatibility markers, not the running version.
 
+## Per-project dev shells
+
+Project-specific tools belong in the project, not in this config. Scaffold
+a dev shell in any repo:
+
+```sh
+nix flake init -t /etc/nixos   # drops flake.nix + .envrc
+direnv allow                   # opt in once; auto-loads on cd from then on
+```
+
+Add the project's tools to `packages` in its flake.nix; the shell loads on
+`cd` in and unloads on `cd` out (`use flake` via direnv, cached by
+nix-direnv). If a project needs real services (postgres, redis) running
+per-project, reach for devenv.sh in that repo instead — same idea,
+batteries included.
+
 ## Adding things
 
 - A system package → `modules/nixos/packages.nix`
