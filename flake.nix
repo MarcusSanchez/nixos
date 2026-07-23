@@ -22,6 +22,12 @@
       url = "github:catppuccin/nix";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+    # prebuilt weekly nix-index databases (both platforms) — what makes
+    # comma work without ever running `nix-index` by hand
+    nix-index-database = {
+      url = "github:nix-community/nix-index-database";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
   };
 
   outputs =

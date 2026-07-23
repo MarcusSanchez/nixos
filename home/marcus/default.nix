@@ -9,6 +9,7 @@
     ./neovim.nix
     ./git.nix
     ./catppuccin.nix
+    ./comma.nix
   ];
 
   home.sessionVariables = {
