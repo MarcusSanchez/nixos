@@ -12,6 +12,8 @@
   ];
 
   home.sessionVariables = {
+    # NixOS ships nano as the default $EDITOR; make git/rebase/etc. open nvim
+    EDITOR = "nvim";
     SUDO_EDITOR = "nvim";
   };
 
