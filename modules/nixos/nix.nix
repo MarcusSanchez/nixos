@@ -8,6 +8,20 @@
       "flakes"
     ];
     auto-optimise-store = true;
+
+    # Pull claude-code from its cachix cache instead of rebuilding it on
+    # every input bump. Purely build-vs-download: versions still come from
+    # flake.lock, and a cache miss just builds locally. Can't live in
+    # modules/common (darwin has nix.enable = false) — the mac gets the
+    # same two lines in /etc/nix/nix.custom.conf instead.
+    substituters = [
+      "https://cache.nixos.org"
+      "https://claude-code.cachix.org"
+    ];
+    trusted-public-keys = [
+      "cache.nixos.org-1:6NCHdD59X431o0gWypbMrAURkbJ16ZPMQFGspcDShjY="
+      "claude-code.cachix.org-1:YeXf2aNu7UTX8Vwrze0za1WEDS+4DuI2kVeWEE4fsRk="
+    ];
   };
 
   # Automatic cleanup
