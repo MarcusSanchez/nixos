@@ -3,13 +3,12 @@
 
 {
   imports = [
+    ../common
     ./nix.nix
-    ./packages.nix
     ./homebrew.nix
     ./users.nix
     ./macos.nix
     ./fonts.nix
     ./home-manager.nix
-    ./claude-code.nix
   ];
 }

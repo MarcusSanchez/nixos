@@ -1,10 +1,11 @@
-# System-wide development toolchains and CLI basics.
-#
-# Deliberately absent vs the WSL config: gcc/gnumake/curl/unzip/gzip/gnutar —
-# macOS and the Xcode Command Line Tools provide those (clang, make, bsdtar).
+# Dev toolchains and CLI basics for every machine. Platform-only packages
+# (build essentials the mac gets from Xcode CLT) live in the platform's own
+# packages.nix.
 { pkgs, ... }:
 
 {
+  nixpkgs.config.allowUnfree = true;
+
   environment.systemPackages = with pkgs; [
     tree
     jq
@@ -26,8 +27,9 @@
     go
     gopls
 
-    # rustup rather than nixpkgs rustc/cargo, same as on WSL — one toolchain
-    # manager everywhere (bootstrap hook in home/marcus/toolchains.nix)
+    # rustup rather than nixpkgs rustc/cargo: RustRover only accepts a
+    # rustup-managed toolchain. Bootstrap/repair hooks live in
+    # home/marcus/toolchains.nix (WSL, glibc repair) and mac.nix (mac).
     rustup
 
     buf # protobuf tooling, JetBrains plugin points at it

@@ -16,25 +16,26 @@ flake.nix                  Inputs + both host wirings
 hosts/
   wsl/default.nix          WSL host: hostname, stateVersion
   mac/default.nix          Mac host: hostname, platform, stateVersion
+modules/common/            Shared system layer (options must exist on both platforms)
+  packages.nix             Dev toolchains for every machine (go, rustup,
+                           zig+zls, node, buf, python+uv, nix LSP, ...)
+  claude-code.nix          Claude Code (claude-code-nix overlay)
 modules/nixos/             WSL system layer (one concern per file)
-  default.nix              Aggregator — imports everything below
+  default.nix              Aggregator — imports ../common + everything below
   nix.nix                  Nix settings, GC, auto-upgrade
-  packages.nix             System dev toolchains (go, rustup, zig+zls, node, buf, ...)
+  packages.nix             Linux-only: build essentials the mac gets from Xcode CLT
   nix-ld.nix               Run unpatched dynamic binaries on NixOS
   users.nix                User accounts + login shell
   wsl.nix                  NixOS-WSL integration
   home-manager.nix         HM bridge → home/marcus/wsl.nix
-  claude-code.nix          Claude Code (claude-code-nix overlay)
 modules/darwin/            Mac system layer
-  default.nix              Aggregator
+  default.nix              Aggregator — imports ../common + everything below
   nix.nix                  nix.enable = false — Determinate Nix owns the daemon
-  packages.nix             Same toolchains, minus what Xcode CLT provides
   homebrew.nix             Declarative brew: GUI casks + few formulae, cleanup=zap
   users.nix                marcussanchez + primaryUser
   macos.nix                macOS defaults; Touch ID for sudo
   fonts.nix                JetBrainsMono Nerd Font
   home-manager.nix         HM bridge → home/marcus/mac.nix
-  claude-code.nix          Claude Code (claude-code-nix overlay)
 home/marcus/               Home Manager (per-user) modules
   default.nix              Shared core — imports the concern files below
   wsl.nix                  WSL entry: identity + toolchains.nix
@@ -175,13 +176,15 @@ running version.
 
 ## Adding things
 
-- A CLI tool for both machines → `modules/nixos/packages.nix` **and**
-  `modules/darwin/packages.nix` (or `home/marcus/packages.nix` once, if
-  it's user-scoped)
+- A CLI tool for both machines → `modules/common/packages.nix` (or
+  `home/marcus/packages.nix` if it's user-scoped)
+- A Linux-only or mac-only system package → that platform's `packages.nix`
+  (darwin currently has none — create the file if one appears)
 - A GUI app on the mac → a cask in `modules/darwin/homebrew.nix`
   (`cleanup = "zap"`: anything not declared gets uninstalled)
-- A new concern → new file in `modules/nixos/` or `modules/darwin/`,
-  then add it to that platform's `default.nix` aggregator
+- A new concern → new file in `modules/common/`, `modules/nixos/`, or
+  `modules/darwin/` (common only if its options exist on both platforms),
+  then add it to that directory's `default.nix` aggregator
 - Shared user config → concern file in `home/marcus/` + import in
   `home/marcus/default.nix`; platform-only user config → import it from
   `wsl.nix` or `mac.nix` instead
