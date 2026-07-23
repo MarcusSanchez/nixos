@@ -4,7 +4,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## What this is
 
-Flake-based Nix configuration for two machines: a WSL NixOS box (host `nixos`, user `marcus`) and a MacBook Air on nix-darwin + Determinate Nix (host `Marcuss-MacBook-Air`, user `marcussanchez`). On WSL the repo lives at `~/nixos-config` with `/etc/nixos` symlinked to it (what `nixos-rebuild` and the weekly `system.autoUpgrade` rely on); on the mac it lives at `~/nix-config` with `/etc/nix-darwin` symlinked to it.
+Flake-based Nix configuration for two machines: a WSL NixOS box (host `nixos`, user `marcus`) and a MacBook Air on nix-darwin + Determinate Nix (host `Marcuss-MacBook-Air`, user `marcussanchez`). On both machines the repo lives at `~/nix-config`; on WSL `/etc/nixos` is symlinked to it (what `nixos-rebuild` and the weekly `system.autoUpgrade` rely on), on the mac `/etc/nix-darwin` is.
 
 Claude Code sessions run on the WSL machine. Mac changes can be evaluated here but never built or activated — flag them for marcus to apply on the mac.
 

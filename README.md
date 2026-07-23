@@ -2,9 +2,10 @@
 
 One flake, two machines:
 
-- **WSL** — NixOS (host `nixos`, user `marcus`). Repo at `~/nixos-config`,
-  symlinked to `/etc/nixos`, so `nixos-rebuild` and `system.autoUpgrade`
-  find it without extra flags.
+- **WSL** — NixOS (host `nixos`, user `marcus`). Repo at `~/nix-config`,
+  symlinked to `/etc/nixos` (that path is what `nixos-rebuild` and
+  `system.autoUpgrade` look for — the symlink name is fixed, the repo
+  location isn't).
 - **MacBook Air** — nix-darwin on Determinate Nix (host `Marcuss-MacBook-Air`,
   user `marcussanchez`). Repo at `~/nix-config`, symlinked to
   `/etc/nix-darwin`, so bare `darwin-rebuild` finds it.
@@ -128,9 +129,9 @@ sudo nixos-rebuild switch --option experimental-features 'nix-command flakes' --
 
 # Move the repo home and recreate the /etc/nixos symlink (not managed by
 # the config; autoUpgrade depends on it)
-sudo mv /tmp/nixos-config /home/marcus/nixos-config
-sudo chown -R marcus:users /home/marcus/nixos-config
-sudo ln -sfn /home/marcus/nixos-config /etc/nixos
+sudo mv /tmp/nixos-config /home/marcus/nix-config
+sudo chown -R marcus:users /home/marcus/nix-config
+sudo ln -sfn /home/marcus/nix-config /etc/nixos
 exit
 ```
 
