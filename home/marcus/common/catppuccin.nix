@@ -12,8 +12,6 @@
     flavor = "mocha";
     accent = "blue";
 
-    zsh-syntax-highlighting.enable = true;
-    atuin.enable = true;
     nvim.enable = false;
   };
 }
