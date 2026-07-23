@@ -29,7 +29,8 @@
 
     # rustup rather than nixpkgs rustc/cargo: RustRover only accepts a
     # rustup-managed toolchain. Bootstrap/repair hooks live in
-    # home/marcus/wsl/toolchains.nix (WSL, glibc repair) and mac.nix (mac).
+    # home/marcus/{wsl,mac}/toolchains.nix (glibc repair on WSL, plain
+    # first-run bootstrap on the mac).
     rustup
 
     buf # protobuf tooling, JetBrains plugin points at it

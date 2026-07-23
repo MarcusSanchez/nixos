@@ -1,9 +1,11 @@
-# Home Manager entry point for the WSL machine: shared config + Linux bits.
+# Home Manager entry point for the WSL machine: identity + shared config +
+# WSL-only concerns.
 { ... }:
 
 {
   imports = [
     ./common
+    ./wsl/nix.nix
     ./wsl/toolchains.nix
   ];
 

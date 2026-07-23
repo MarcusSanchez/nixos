@@ -39,7 +39,6 @@ modules/darwin/            Mac system layer
 home/marcus/               Home Manager (per-user), same shape as modules/
   wsl.nix                  WSL entry: identity + common/ + wsl/ imports
   mac.nix                  Mac entry: identity + common/ + mac/ imports
-                           + rustup first-run bootstrap
   common/                  Shared concern files (default.nix aggregates)
     packages.nix           Standalone user tools
     shell.nix              zsh + oh-my-zsh, zoxide, atuin, direnv, npm prefix
@@ -52,12 +51,14 @@ home/marcus/               Home Manager (per-user), same shape as modules/
     catppuccin.nix         Catppuccin Mocha theming
     comma.nix              comma + prebuilt nix-index database
   wsl/
+    nix.nix                NH_FLAKE for bare `nh os switch`
     toolchains.nix         ~/.toolchains/go real-dir GOROOT copy for
                            Windows IDEs (\\wsl$ can't traverse symlinks);
                            rustup toolchain auto-repair on glibc bumps
   mac/
     ghostty.nix            Ghostty config (app itself is a brew cask)
-    nix.nix                user-level GC launchd agent
+    nix.nix                user-level GC launchd agent + NH_FLAKE
+    toolchains.nix         rustup first-run bootstrap
 templates/devshell/        Per-project dev shell scaffold (both platforms)
 ```
 
