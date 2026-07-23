@@ -6,15 +6,25 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 Flake-based Nix configuration for two machines: a WSL NixOS box (host `nixos`, user `marcus`) and a MacBook Air on nix-darwin + Determinate Nix (host `Marcuss-MacBook-Air`, user `marcussanchez`). On both machines the repo lives at `~/nix-config`; on WSL `/etc/nixos` is symlinked to it (what `nixos-rebuild` and the weekly `system.autoUpgrade` rely on), on the mac `/etc/nix-darwin` is.
 
-Claude Code sessions run on the WSL machine. Mac changes can be evaluated here but never built or activated — flag them for marcus to apply on the mac.
+Claude Code sessions run on either machine (`uname` disambiguates). Each machine can build and activate only its own platform; the *other* platform's config can still be fully evaluated — do that after touching shared files, and flag cross-platform changes for marcus to activate on the other machine.
 
 ## Commands
 
 ```sh
-sudo nixos-rebuild switch --flake /etc/nixos   # apply config on this (WSL) machine (passwordless sudo works)
-nix flake check                                # validate before switching — always do this after edits
+# WSL only
+sudo nixos-rebuild switch --flake /etc/nixos   # apply (passwordless sudo works)
 nix eval --raw '/etc/nixos#darwinConfigurations."Marcuss-MacBook-Air".system.drvPath'
-                                               # full eval of the mac system — run after touching darwin/ or home/
+                                               # eval the mac system after touching darwin/ or home/
+
+# Mac only
+sudo darwin-rebuild switch                     # apply — sudo pops a Touch ID prompt that works
+                                               # even from Claude's non-interactive shell; marcus
+                                               # approves it by fingerprint
+nix eval --raw '/etc/nix-darwin#nixosConfigurations.nixos.config.system.build.toplevel.drvPath'
+                                               # eval the WSL system after touching nixos/ or home/
+
+# Both
+nix flake check                                # validate before switching — always do this after edits
 nix fmt                                        # format all nix files (nixfmt-tree)
 nix flake update                               # bump all inputs (autoUpgrade never does this)
 ```

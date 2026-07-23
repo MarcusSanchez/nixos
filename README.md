@@ -79,13 +79,19 @@ nix flake init -t /etc/nixos       # scaffold a project dev shell (mac: -t ~/nix
 On WSL, auto-upgrade rebuilds weekly against the lockfile and GC runs daily
 (both timers catch up after downtime). The mac has no autoUpgrade — update
 via `nh darwin switch -u`; user-level GC runs weekly as a launchd agent.
-To see what a rebuild changed: `nvd diff /run/booted-system /run/current-system`
-(WSL) or the diff `nh` prints on either machine.
+To see what a rebuild changed: the diff `nh` prints on either machine, or
+`nvd diff /run/booted-system /run/current-system` on WSL /
+`nvd diff $(ls -d1v /nix/var/nix/profiles/system-*-link | tail -2)` on the mac
+(no booted-system there — nix-darwin doesn't own the boot).
 
-From this Linux machine, mac changes can be *evaluated* but not built:
+Each machine can *evaluate* (not build) the other's config — do this after
+touching shared files:
 
 ```sh
+# from WSL:
 nix eval --raw '/etc/nixos#darwinConfigurations."Marcuss-MacBook-Air".system.drvPath'
+# from the mac:
+nix eval --raw '/etc/nix-darwin#nixosConfigurations.nixos.config.system.build.toplevel.drvPath'
 ```
 
 ## Per-project dev shells
@@ -153,16 +159,23 @@ via the activation hook; what's left is per-machine state:
 ## Bootstrapping a new Mac
 
 ```sh
-# 1. Install Determinate Nix (run in a real terminal — needs sudo)
+# 1. Install Homebrew — it also installs the Xcode Command Line Tools,
+#    which provide the git used below (a fresh Mac has neither). nix-darwin
+#    drives brew declaratively but never installs it.
+/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+
+# 2. Install Determinate Nix (needs sudo) — then OPEN A NEW TERMINAL,
+#    nix is not on PATH in the shell that ran the installer
 curl -fsSL https://install.determinate.systems/nix | sh -s -- install --no-confirm
 
-# 2. Clone (Homebrew must already be installed — nix-darwin drives it, not installs it)
+# 3. Clone the config
 git clone https://github.com/MarcusSanchez/nixos.git ~/nix-config
 
-# 3. First activation (bootstraps darwin-rebuild itself)
+# 4. First activation (bootstraps darwin-rebuild itself; this is also where
+#    brew installs everything declared in homebrew.nix)
 sudo nix run nix-darwin/master#darwin-rebuild -- switch --flake ~/nix-config
 
-# 4. Symlink so bare `sudo darwin-rebuild switch` works — the analog of
+# 5. Symlink so bare `sudo darwin-rebuild switch` works — the analog of
 #    the WSL machine keeping its config at /etc/nixos
 sudo ln -s ~/nix-config /etc/nix-darwin
 ```
