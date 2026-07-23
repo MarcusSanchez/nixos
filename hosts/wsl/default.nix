@@ -5,6 +5,8 @@
 {
   imports = [ ../../modules/nixos ];
 
+  nixpkgs.hostPlatform = "x86_64-linux";
+
   networking.hostName = "nixos";
 
   # Do not change after initial install.
