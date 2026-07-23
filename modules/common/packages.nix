@@ -44,6 +44,11 @@
     nixd
     nixfmt
 
+    # nix linters, also enforced by CI: statix (antipatterns, config in
+    # statix.toml) and deadnix (unused bindings)
+    statix
+    deadnix
+
     # zls is built against this same nixpkgs zig, so the compiler and
     # language server stay on matching versions automatically
     zig

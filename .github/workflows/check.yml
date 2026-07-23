@@ -16,6 +16,12 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - uses: DeterminateSystems/nix-installer-action@v16
+      # --inputs-from . pins the linters to the repo's own locked nixpkgs,
+      # matching the versions installed on the machines
+      - name: lint (statix + deadnix)
+        run: |
+          nix run --inputs-from . nixpkgs#statix -- check .
+          nix run --inputs-from . nixpkgs#deadnix -- --fail .
       - name: nix flake check
         run: nix flake check
       - name: evaluate the mac system

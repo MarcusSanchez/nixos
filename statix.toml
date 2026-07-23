@@ -1,0 +1,4 @@
+# empty_pattern wants `{ ... }:` module headers rewritten as `_:`.
+# `{ ... }:` is this repo's deliberate convention — it uniformly marks
+# module files whether or not they currently take arguments.
+disabled = ["empty_pattern"]
