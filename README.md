@@ -36,24 +36,28 @@ modules/darwin/            Mac system layer
   macos.nix                macOS defaults; Touch ID for sudo
   fonts.nix                JetBrainsMono Nerd Font
   home-manager.nix         HM bridge → home/marcus/mac.nix
-home/marcus/               Home Manager (per-user) modules
-  default.nix              Shared core — imports the concern files below
-  wsl.nix                  WSL entry: identity + toolchains.nix
-  mac.nix                  Mac entry: identity + ghostty/nix.nix + rustup bootstrap
-  packages.nix             Standalone user tools
-  shell.nix                zsh + oh-my-zsh, zoxide, atuin, direnv, npm prefix
-  neovim.nix               Neovim (stable); clones marcussanchez/neovim-config
+home/marcus/               Home Manager (per-user), same shape as modules/
+  wsl.nix                  WSL entry: identity + common/ + wsl/ imports
+  mac.nix                  Mac entry: identity + common/ + mac/ imports
+                           + rustup first-run bootstrap
+  common/                  Shared concern files (default.nix aggregates)
+    packages.nix           Standalone user tools
+    shell.nix              zsh + oh-my-zsh, zoxide, atuin, direnv, npm prefix
+    neovim.nix             Neovim (stable); clones marcussanchez/neovim-config
                            to ~/.config/nvim on first activation, ff-only
                            pulls it on later ones when the tree is clean
                            (stays a normal mutable git checkout, not
                            nix-managed)
-  git.nix                  Git identity + gh
-  catppuccin.nix           Catppuccin Mocha theming
-  ghostty.nix              [mac] Ghostty config (app itself is a brew cask)
-  nix.nix                  [mac] user-level GC launchd agent
-  toolchains.nix           [wsl] ~/.toolchains/go real-dir GOROOT copy for
+    git.nix                Git identity + gh
+    catppuccin.nix         Catppuccin Mocha theming
+    comma.nix              comma + prebuilt nix-index database
+  wsl/
+    toolchains.nix         ~/.toolchains/go real-dir GOROOT copy for
                            Windows IDEs (\\wsl$ can't traverse symlinks);
                            rustup toolchain auto-repair on glibc bumps
+  mac/
+    ghostty.nix            Ghostty config (app itself is a brew cask)
+    nix.nix                user-level GC launchd agent
 templates/devshell/        Per-project dev shell scaffold (both platforms)
 ```
 
@@ -205,6 +209,6 @@ running version.
 - A new concern → new file in `modules/common/`, `modules/nixos/`, or
   `modules/darwin/` (common only if its options exist on both platforms),
   then add it to that directory's `default.nix` aggregator
-- Shared user config → concern file in `home/marcus/` + import in
-  `home/marcus/default.nix`; platform-only user config → import it from
-  `wsl.nix` or `mac.nix` instead
+- Shared user config → concern file in `home/marcus/common/` + import in
+  its `default.nix`; platform-only user config → file in `home/marcus/wsl/`
+  or `home/marcus/mac/`, imported from the `wsl.nix` / `mac.nix` entry point

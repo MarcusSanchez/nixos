@@ -1,5 +1,6 @@
 # Shared Home Manager config for every machine. Per-host entry points
-# (wsl.nix, mac.nix) set identity and the platform-only imports.
+# (../wsl.nix, ../mac.nix) set identity and the platform-only imports
+# from ../wsl/ and ../mac/.
 { ... }:
 
 {

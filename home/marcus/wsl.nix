@@ -3,8 +3,8 @@
 
 {
   imports = [
-    ./default.nix
-    ./toolchains.nix
+    ./common
+    ./wsl/toolchains.nix
   ];
 
   home.username = "marcus";

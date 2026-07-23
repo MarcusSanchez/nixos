@@ -8,9 +8,9 @@
 
 {
   imports = [
-    ./default.nix
-    ./ghostty.nix
-    ./nix.nix
+    ./common
+    ./mac/ghostty.nix
+    ./mac/nix.nix
   ];
 
   home.username = "marcussanchez";
