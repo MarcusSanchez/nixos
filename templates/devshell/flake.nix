@@ -6,10 +6,13 @@
   outputs =
     { nixpkgs, ... }:
     let
-      # Same shell on the mac and on WSL
+      # Every platform current nixpkgs supports, not just the machines this
+      # template came from — so collaborators (ARM linux, any mac) can
+      # direnv in too. (No x86_64-darwin: nixpkgs 26.11 dropped Intel macs.)
       forAllSystems = nixpkgs.lib.genAttrs [
-        "aarch64-darwin"
         "x86_64-linux"
+        "aarch64-linux"
+        "aarch64-darwin"
       ];
     in
     {
