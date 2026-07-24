@@ -19,6 +19,10 @@
     direnv = {
       enable = true;
       nix-direnv.enable = true;
+      # Silence the per-cd chatter; only log lines matching "error"
+      # survive, so a broken .envrc still shows up loud. (The old
+      # DIRENV_LOG_FORMAT="" trick no longer silences direnv 2.37+.)
+      config.global.log_filter = "error";
     };
 
     zsh = {
